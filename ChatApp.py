@@ -4,10 +4,13 @@ from dotenv import load_dotenv
 import os
 import re
 
+# Access API key from Streamlit secrets
+api_key = st.secrets["OPENAI_API_KEY"]
+
 # Load environment variables and assistant details
 load_dotenv()
 # client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
+client = OpenAI(api_key=api_key)
 
 # Load assistant and vector store IDs
 with open('assistant_config.txt', 'r') as config_file:
