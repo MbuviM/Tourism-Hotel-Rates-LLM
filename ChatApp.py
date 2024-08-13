@@ -123,4 +123,4 @@ st.markdown("""
 
 # Instructions to run the Streamlit app
 if __name__ == "__main__":
-    st.sidebar.info("To run this Streamlit app, use the command: `streamlit run app.py`")
+    st.sidebar.info("To run this Streamlit app, use the command: `streamlit run ChatApp.py`")
