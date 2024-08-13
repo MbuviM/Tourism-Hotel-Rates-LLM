@@ -60,7 +60,7 @@ st.title("Tourism Rate Explainer 🌴")
 uploaded_files = st.file_uploader("Upload your documents (PDFs)", type="pdf", accept_multiple_files=True)
 
 # User query input
-user_query = st.text_area("Enter your query about the uploaded documents:", "")
+user_query = st.text_area("How can I help you better understand the uploaded files?:", "")
 
 def extract_text_from_pdf(file):
     reader = PdfReader(file)
