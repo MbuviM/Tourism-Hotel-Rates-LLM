@@ -1,8 +1,9 @@
 import streamlit as st
 from openai import OpenAI
-from dotenv import load_dotenv
-import os
 import re
+
+# Streamlit UI configuration (must be the first Streamlit command)
+st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 
 # Access API key from Streamlit secrets
 api_key = st.secrets["OPENAI_API_KEY"]
@@ -10,22 +11,8 @@ assistant_id = st.secrets["assistant_id"]
 vector_store_id = st.secrets["vector_store_id"]
 file_id = st.secrets["file_id"]
 
-
-# Load environment variables and assistant details
-load_dotenv()
-# client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+# Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
-
-""" # Load assistant and vector store IDs
-with open('assistant_config.txt', 'r') as config_file:
-    config = dict(line.strip().split('=') for line in config_file)
-    assistant_id = config['ASSISTANT_ID']
-    vector_store_id = config['VECTOR_STORE_ID']
-    file_id = config['FILE_ID']
-    """
-
-# Streamlit UI configuration
-st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 
 # Custom CSS
 st.markdown("""
@@ -130,4 +117,3 @@ st.markdown("""
 # Instructions to run the Streamlit app
 if __name__ == "__main__":
     st.sidebar.info("To run this Streamlit app, use the command: `streamlit run app.py`")
-
