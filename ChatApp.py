@@ -9,7 +9,6 @@ st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 api_key = st.secrets["OPENAI_API_KEY"]
 assistant_id = st.secrets["assistant_id"]
 vector_store_id = st.secrets["vector_store_id"]
-# file_id = st.secrets["file_id"]
 
 # Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
@@ -68,8 +67,7 @@ if st.button("Submit Query"):
         with st.spinner('Processing your request...'):
             attachments = []
             for uploaded_file in uploaded_files:
-                # Assuming there's a mechanism to upload the file and get back a file_id
-                file_id = upload_file_and_get_id(uploaded_file)  # Placeholder for actual implementation
+                file_id = uploaded_file.name  # Using the file name as a placeholder for file_id
                 attachments.append({"file_id": file_id, "tools": [{"type": "file_search"}]})
 
             # Create a thread for the user's query with attachments
