@@ -7,7 +7,7 @@ import re
 # Load environment variables and assistant details
 load_dotenv()
 # client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
-client = OpenAI(api_key=st.secrets('OPENAI_API_KEY'))
+client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
 # Load assistant and vector store IDs
 with open('assistant_config.txt', 'r') as config_file:
