@@ -46,6 +46,12 @@ assistant = client.beta.assistants.update(
   tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},
 )
 
+# Save the assistant and vector store IDs for use in the Streamlit app
+with open('assistant_config.txt', 'w') as config_file:
+    config_file.write(f"ASSISTANT_ID={assistant.id}\n")
+    config_file.write(f"VECTOR_STORE_ID={vector_store.id}\n")
+    config_file.write(f"FILE_ID={file.id}\n")
+
 # Upload the user provided file to OpenAI
 message_file = client.files.create(
   file=open("2024_rack_rates.pdf", "rb"), purpose="assistants"
@@ -58,7 +64,7 @@ thread = client.beta.threads.create(
   messages=[
     {
       "role": "user",
-      "content": "Please provide an overview of the hotel rates from the document.",
+      "content": "As a 30 year old, how much should I have to be able to spend 2 nights in Hemingways Eden Residence?",
       # Attach the new file to the message.
       "attachments": [
         { "file_id": message_file.id, "tools": [{"type": "file_search"}] }
@@ -83,7 +89,7 @@ messages = list(client.beta.threads.messages.list(thread_id=thread.id, run_id=ru
 
 # Check if there are any messages
 if not messages:
-    print("As a 30 year old, how much should I have to be able to spemd 2 nights in Hemingways Eden Residence?")
+    print("Message not found.")
 else:
     # Print the number of messages
     print(f"Number of messages: {len(messages)}")
