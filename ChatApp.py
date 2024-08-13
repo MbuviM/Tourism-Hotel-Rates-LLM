@@ -6,18 +6,22 @@ import re
 
 # Access API key from Streamlit secrets
 api_key = st.secrets["OPENAI_API_KEY"]
+assistant_id = st.secrets["assistant"]["ASSISTANT_ID"]
+vector_store_id = st.secrets["assistant"]["VECTOR_STORE_ID"]
+file_id = st.secrets["assistant"]["FILE_ID"]
 
 # Load environment variables and assistant details
 load_dotenv()
 # client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 client = OpenAI(api_key=api_key)
 
-# Load assistant and vector store IDs
+""" # Load assistant and vector store IDs
 with open('assistant_config.txt', 'r') as config_file:
     config = dict(line.strip().split('=') for line in config_file)
     assistant_id = config['ASSISTANT_ID']
     vector_store_id = config['VECTOR_STORE_ID']
     file_id = config['FILE_ID']
+    """
 
 # Streamlit UI configuration
 st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
