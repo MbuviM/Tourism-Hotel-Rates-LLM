@@ -9,7 +9,7 @@ st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 api_key = st.secrets["OPENAI_API_KEY"]
 assistant_id = st.secrets["assistant_id"]
 vector_store_id = st.secrets["vector_store_id"]
-file_id = st.secrets["file_id"]
+# file_id = st.secrets["file_id"]
 
 # Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
@@ -57,19 +57,28 @@ if st.session_state['history']:
 # Main content area
 st.title("Tourism Rate Explainer 🌴")
 
+# File upload feature
+uploaded_files = st.file_uploader("Upload your files (you can select multiple):", accept_multiple_files=True, type=["pdf", "docx", "txt"])
+
 # User query input
 user_query = st.text_area("Enter your query about the hotel rates:", "")
 
 if st.button("Submit Query"):
-    if user_query:
+    if user_query and uploaded_files:
         with st.spinner('Processing your request...'):
-            # Create a thread for the user's query
+            attachments = []
+            for uploaded_file in uploaded_files:
+                # Assuming there's a mechanism to upload the file and get back a file_id
+                file_id = upload_file_and_get_id(uploaded_file)  # Placeholder for actual implementation
+                attachments.append({"file_id": file_id, "tools": [{"type": "file_search"}]})
+
+            # Create a thread for the user's query with attachments
             thread = client.beta.threads.create(
                 messages=[
                     {
                         "role": "user",
                         "content": user_query,
-                        "attachments": [{"file_id": file_id, "tools": [{"type": "file_search"}]}],
+                        "attachments": attachments,
                     }
                 ]
             )
@@ -104,7 +113,7 @@ if st.button("Submit Query"):
                 except (IndexError, AttributeError) as e:
                     st.error(f"An error occurred while processing the response: {e}")
     else:
-        st.warning("Please enter a query.")
+        st.warning("Please enter a query and upload at least one file.")
 
 # Footer
 st.markdown("""
