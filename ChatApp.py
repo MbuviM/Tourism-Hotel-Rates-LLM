@@ -5,10 +5,10 @@ import os
 import re
 
 # Access API key from Streamlit secrets
-api_key = st.secrets["OPENAI_API_KEY"]
-assistant_id = st.secrets["ASSISTANT_ID"]
-vector_store_id = st.secrets["VECTOR_STORE_ID"]
-file_id = st.secrets["FILE_ID"]
+api_key = st.secrets["open-ai"]["OPENAI_API_KEY"]
+assistant_id = st.secrets["assistants"]["ASSISTANT_ID"]
+vector_store_id = st.secrets["assistants"]["VECTOR_STORE_ID"]
+file_id = st.secrets["assistants"]["FILE_ID"]
 
 # Load environment variables and assistant details
 load_dotenv()
