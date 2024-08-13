@@ -1,4 +1,5 @@
 import streamlit as st
+from PyPDF2 import PdfReader
 from openai import OpenAI
 import re
 
@@ -8,7 +9,6 @@ st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 # Access API key from Streamlit secrets
 api_key = st.secrets["OPENAI_API_KEY"]
 assistant_id = st.secrets["assistant_id"]
-vector_store_id = st.secrets["vector_store_id"]
 
 # Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
@@ -56,62 +56,70 @@ if st.session_state['history']:
 # Main content area
 st.title("Tourism Rate Explainer 🌴")
 
-# File upload feature
-uploaded_files = st.file_uploader("Upload your files (you can select multiple):", accept_multiple_files=True, type=["pdf", "docx", "txt"])
+# File upload section
+uploaded_files = st.file_uploader("Upload your documents (PDFs)", type="pdf", accept_multiple_files=True)
 
 # User query input
-user_query = st.text_area("Enter your query about the hotel rates:", "")
+user_query = st.text_area("Enter your query about the uploaded documents:", "")
+
+def extract_text_from_pdf(file):
+    reader = PdfReader(file)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
+    return text
 
 if st.button("Submit Query"):
-    if user_query and uploaded_files:
-        with st.spinner('Processing your request...'):
-            attachments = []
-            for uploaded_file in uploaded_files:
-                file_id = uploaded_file.name  # Using the file name as a placeholder for file_id
-                attachments.append({"file_id": file_id, "tools": [{"type": "file_search"}]})
+    if uploaded_files and user_query:
+        documents_content = ""
+        for uploaded_file in uploaded_files:
+            # Extract text content from each uploaded PDF
+            file_content = extract_text_from_pdf(uploaded_file)
+            documents_content += f"\n\n{file_content}"
 
-            # Create a thread for the user's query with attachments
-            thread = client.beta.threads.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": user_query,
-                        "attachments": attachments,
-                    }
-                ]
-            )
-            
-            # Run and poll the thread for a response
-            run = client.beta.threads.runs.create_and_poll(
-                thread_id=thread.id, assistant_id=assistant_id
-            )
-            
-            # Retrieve messages
-            messages = list(client.beta.threads.messages.list(thread_id=thread.id, run_id=run.id))
-            
-            if not messages:
-                st.error("No response received. Please try again.")
-            else:
-                try:
-                    message_content = messages[0].content[0].text if messages[0].content else None
-                    if message_content:
-                        # Clean up the response
-                        cleaned_response = message_content.value
-                        cleaned_response = re.sub(r'【\d+:\d+†source】', '', cleaned_response)
-                        
-                        # Store conversation in session state
-                        st.session_state['history'].append((user_query, cleaned_response))
-                        
-                        # Display the response
-                        st.markdown("<hr>", unsafe_allow_html=True)
-                        st.markdown(f'<div class="big-font">{cleaned_response}</div>', unsafe_allow_html=True)
-                        
-                    else:
-                        st.error("Response content is missing or malformed.")
-                except (IndexError, AttributeError) as e:
-                    st.error(f"An error occurred while processing the response: {e}")
+        if documents_content:
+            with st.spinner('Processing your request...'):
+                # Create a thread for the user's query
+                thread = client.beta.threads.create(
+                    messages=[
+                        {
+                            "role": "user",
+                            "content": f"{user_query}\n\nDocuments:\n{documents_content}",
+                        }
+                    ]
+                )
+                
+                # Run and poll the thread for a response
+                run = client.beta.threads.runs.create_and_poll(
+                    thread_id=thread.id, assistant_id=assistant_id
+                )
+                
+                # Retrieve messages
+                messages = list(client.beta.threads.messages.list(thread_id=thread.id, run_id=run.id))
+                
+                if not messages:
+                    st.error("No response received. Please try again.")
+                else:
+                    try:
+                        message_content = messages[0].content[0].text if messages[0].content else None
+                        if message_content:
+                            # Clean up the response
+                            cleaned_response = message_content.value
+                            cleaned_response = re.sub(r'【\d+:\d+†source】', '', cleaned_response)
+                            
+                            # Store conversation in session state
+                            st.session_state['history'].append((user_query, cleaned_response))
+                            
+                            # Display the response
+                            st.markdown("<hr>", unsafe_allow_html=True)
+                            st.markdown(f'<div class="big-font">{cleaned_response}</div>', unsafe_allow_html=True)
+                            
+                        else:
+                            st.error("Response content is missing or malformed.")
+                    except (IndexError, AttributeError) as e:
+                        st.error(f"An error occurred while processing the response: {e}")
     else:
-        st.warning("Please enter a query and upload at least one file.")
+        st.warning("Please upload files and enter a query.")
 
 # Footer
 st.markdown("""
