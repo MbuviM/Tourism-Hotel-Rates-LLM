@@ -3,6 +3,14 @@ from PyPDF2 import PdfReader
 from openai import OpenAI
 import re
 
+# Add custom CSS to hide the GitHub icon
+hide_github_icon = """
+#GithubIcon {
+  visibility: hidden;
+}
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
+
 # Streamlit UI configuration (must be the first Streamlit command)
 st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 
