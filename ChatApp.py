@@ -69,6 +69,13 @@ def extract_text_from_pdf(file):
         text += page.extract_text()
     return text
 
+# Process the user query if provided
+if user_query and st.session_state['uploaded_files']:
+    document_text = ""
+    for file in st.session_state['uploaded_files']:
+        document_text += extract_text_from_pdf(file)
+
+
 if st.button("Submit Query"):
     if uploaded_files and user_query:
         documents_content = ""
