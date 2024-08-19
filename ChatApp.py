@@ -126,7 +126,7 @@ if st.button("Submit Query"):
                         st.error(f"An error occurred while processing the response: {e}")
     else:
         st.warning("Please upload files and enter a query.")
-
+        
 # Footer
 st.markdown("""
 <hr>
