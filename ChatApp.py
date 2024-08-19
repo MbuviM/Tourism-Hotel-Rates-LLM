@@ -58,9 +58,11 @@ st.title("Tourism Rate Explainer 🌴")
 
 # File upload section
 uploaded_files = st.file_uploader("Upload your documents (PDFs)", type="pdf", accept_multiple_files=True)
+if uploaded_files:
+    st.session_state['uploaded_files'] = uploaded_files
 
 # User query input
-user_query = st.text_area("How can I help you better understand the uploaded files?:", "")
+user_query = st.text_area("How can I help you better understand the uploaded files?", "")
 
 def extract_text_from_pdf(file):
     reader = PdfReader(file)
@@ -126,7 +128,7 @@ if st.button("Submit Query"):
                         st.error(f"An error occurred while processing the response: {e}")
     else:
         st.warning("Please upload files and enter a query.")
-        
+
 # Footer
 st.markdown("""
 <hr>
