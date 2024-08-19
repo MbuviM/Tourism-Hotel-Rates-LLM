@@ -27,12 +27,17 @@ st.markdown("""
 .sidebar .sidebar-content {
     background-image: linear-gradient(#f0f8ff,#e6f3ff);
 }
-            
+</style>
+""", unsafe_allow_html=True)
+
+hide_github_icon = """
+<style>
 #GithubIcon {
   visibility: hidden;
 }
 </style>
-""", unsafe_allow_html=True)
+"""
+st.markdown(hide_github_icon, unsafe_allow_html=True)
 
 # Sidebar for conversation history
 st.sidebar.title("Conversation History")
