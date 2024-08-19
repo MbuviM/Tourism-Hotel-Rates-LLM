@@ -128,15 +128,3 @@ if st.button("Submit Query"):
                         st.error(f"An error occurred while processing the response: {e}")
     else:
         st.warning("Please upload files and enter a query.")
-
-# Footer
-st.markdown("""
-<hr>
-<footer style='text-align: center; color: #aaa; padding: 10px;'>
-    Powered by OpenAI | Built with Streamlit
-</footer>
-""", unsafe_allow_html=True)
-
-# Instructions to run the Streamlit app
-if __name__ == "__main__":
-    st.sidebar.info("To run this Streamlit app, use the command: `streamlit run ChatApp.py`")
