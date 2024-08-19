@@ -75,11 +75,10 @@ if user_query and st.session_state['uploaded_files']:
     for file in st.session_state['uploaded_files']:
         document_text += extract_text_from_pdf(file)
 
-
 if st.button("Submit Query"):
-    if uploaded_files and user_query:
+    if st.session_state['uploaded_files'] and user_query:
         documents_content = ""
-        for uploaded_file in uploaded_files:
+        for uploaded_file in st.session_state['uploaded_files']:
             # Extract text content from each uploaded PDF
             file_content = extract_text_from_pdf(uploaded_file)
             documents_content += f"\n\n{file_content}"
