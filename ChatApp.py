@@ -13,31 +13,6 @@ assistant_id = st.secrets["assistant_id"]
 # Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
 
-# Custom CSS
-st.markdown("""
-<style>
-.big-font {
-    font-size:18px !important;
-}
-.stButton>button {
-    background-color: #4CAF50;
-    color: white;
-    font-size: 16px;
-}
-.sidebar .sidebar-content {
-    background-image: linear-gradient(#f0f8ff,#e6f3ff);
-}
-</style>
-""", unsafe_allow_html=True)
-
-hide_github_icon = """
-<style>
-#GithubIcon {
-  visibility: hidden;
-}
-</style>
-"""
-st.markdown(hide_github_icon, unsafe_allow_html=True)
 
 # Sidebar for conversation history
 st.sidebar.title("Conversation History")
