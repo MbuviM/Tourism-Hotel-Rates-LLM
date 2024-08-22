@@ -8,7 +8,7 @@ st.set_page_config(page_title="🌴 Tourism Rate Explainer", layout="wide")
 
 # Access API key from Streamlit secrets
 api_key = st.secrets["OPENAI_API_KEY"]
-assistant_id = st.secrets["assistant_id"]
+assistant_id = st.secrets["ASSISTANT_ID"]
 
 # Initialize OpenAI client with the API key
 client = OpenAI(api_key=api_key)
